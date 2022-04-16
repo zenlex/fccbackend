@@ -8,4 +8,6 @@
 
 - Root folder contains FCC Boilerplate used for the in course exercises and testing
 
-- Subfolders `/timestamp`, `/urlshortener`, `/headerparser`, `exercisetracker`, and `/filemetadata` each contain archives of my work on the projects as currently hosted on replit. 
+- Subfolders `/timestamp`, `/urlshortener`, `/headerparser`, `exercisetracker`, and `/filemetadata` contain their respective projects. 
+- Projects currently hosted on replit.com
+- See subfolders for project specific READMEs
