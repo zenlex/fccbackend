@@ -15,18 +15,18 @@ const { Schema } = mongoose;
 const linkSchema = new Schema({
   original_url: {
     type: String,
-    required: true
+    required: true,
   },
   short_url: {
-    type: Number
-  }
+    type: Number,
+  },
 });
 
 // autoIncrement sequence
 const counterSchema = new Schema({
   count: Number,
-  notes: String
-})
+  notes: String,
+});
 
 const Link = mongoose.model('Link', linkSchema);
 const Counter = mongoose.model('Counter', counterSchema);
@@ -35,7 +35,7 @@ app.use(cors());
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
 });
 
@@ -43,11 +43,11 @@ app.get('/', function(req, res) {
 app.use('/api/shorturl', bodyParser.urlencoded({ extended: false }));
 
 // Your first API endpoint
-app.get('/api/hello', function(req, res) {
+app.get('/api/hello', function (req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.post('/api/shorturl', async function(req, res) {
+app.post('/api/shorturl', async function (req, res) {
   const original_url = req.body.url;
   if (!validator.isURL(original_url)) {
     res.send({ error: 'invalid url' });
@@ -55,7 +55,7 @@ app.post('/api/shorturl', async function(req, res) {
     const newLink = await addNewLink(original_url);
     res.send(newLink);
   }
-})
+});
 
 const addNewLink = async (url) => {
   let linkCounter = await Counter.findOne();
@@ -69,25 +69,20 @@ const addNewLink = async (url) => {
   await linkCounter.save();
   const newLink = new Link({ original_url: url, short_url: newCount });
   await newLink.save();
-  return {original_url: url, short_url: newCount};
-};
-
-const getShortUrl = async (original_url) => {
-  const ret = await Link.findOne({ original_url });
-  return ret;
+  return { original_url: url, short_url: newCount };
 };
 
 //retrieve redirect
-app.get('/api/shorturl/:index', async function(req, res) {
+app.get('/api/shorturl/:index', async function (req, res) {
   const index = parseInt(req.params.index);
-  const {original_url} = await Link.findOne({short_url:index});
- if(!original_url){
+  const { original_url } = await Link.findOne({ short_url: index });
+  if (!original_url) {
     res.send({ error: 'invalid url' });
   } else {
     res.redirect(original_url);
   }
-})
+});
 
-app.listen(port, function() {
+app.listen(port, function () {
   console.log(`Listening on port ${port}`);
 });
